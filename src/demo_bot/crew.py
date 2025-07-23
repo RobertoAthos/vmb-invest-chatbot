@@ -14,9 +14,6 @@ class DemoBot():
     
     def __init__(self):
         super().__init__()
-        # Inicializa a ferramenta JSON com o caminho correto
-        json_file_path = os.path.join(os.path.dirname(__file__), "qa_data.json")
-        self.json_s_tool = JSONSearchTool(json_path=json_file_path)
 
     @agent
     def agente_principal(self) -> Agent:
@@ -34,9 +31,10 @@ class DemoBot():
 
     @agent
     def agente_qa(self) -> Agent:
+        json_file_path = os.path.join(os.path.dirname(__file__), "qa_data.json")
         return Agent(
             config=self.agents_config['agente_qa'],
-            tools=[self.json_s_tool],
+            tools=[JSONSearchTool(json_path=json_file_path)],
             verbose=True,  
         )
     
