@@ -2,7 +2,6 @@
 import streamlit as st
 import warnings
 from datetime import datetime
-
 from demo_bot.crew import DemoBot
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
