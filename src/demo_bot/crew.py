@@ -33,13 +33,16 @@ class DemoBot():
     def agente_qa(self) -> Agent:
         json_file_path = os.path.join(os.path.dirname(__file__), "qa_data.json")
         json_config = {
-            "embedding_model": {
-            "provider": "openai", # or openai, ollama, ...
-            "config": {
-                "model": "text-embedding-3-small",
-            },
+    "embedding_model": {
+        "provider": "openai",
+        "config": {
+            "model": "text-embedding-3-small",
         },
-        }
+    },
+    "persist_directory": "/tmp/chroma",  # use diretório temporário
+    "chroma_db_impl": "duckdb",  # <- FORÇA a não usar sqlite
+}
+
         return Agent(
             config=self.agents_config['agente_qa'],
             tools=[JSONSearchTool(json_path=json_file_path, config=json_config)],
