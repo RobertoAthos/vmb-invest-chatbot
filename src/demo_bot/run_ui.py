@@ -5,6 +5,12 @@ Script para executar a interface Streamlit do VMB Invest DemoBot
 import subprocess
 import sys
 import os
+from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent.parent / '.env'
+load_dotenv(env_path)
 
 def run_streamlit():
     """Executa a aplicação Streamlit"""

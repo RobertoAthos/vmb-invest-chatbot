@@ -1,9 +1,16 @@
 #!/usr/bin/env python
 import streamlit as st
 import warnings
+import os
 from datetime import datetime
+from pathlib import Path
+from dotenv import load_dotenv
 
 from demo_bot.crew import DemoBot
+
+# Load environment variables from .env file
+env_path = Path(__file__).parent.parent.parent / '.env'
+load_dotenv(env_path)
 
 warnings.filterwarnings("ignore", category=SyntaxWarning, module="pysbd")
 
