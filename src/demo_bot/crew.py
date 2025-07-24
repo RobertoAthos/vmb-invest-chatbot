@@ -2,8 +2,9 @@ from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from crewai.agents.agent_builder.base_agent import BaseAgent
 from typing import List
-from crewai_tools import JSONSearchTool
 import os
+
+from demo_bot.tools.custom_tool import MyJSONSearchTool
 
 @CrewBase
 class DemoBot():
@@ -33,19 +34,19 @@ class DemoBot():
     def agente_qa(self) -> Agent:
         json_file_path = os.path.join(os.path.dirname(__file__), "qa_data.json")
         json_config = {
-    "embedding_model": {
-        "provider": "openai",
-        "config": {
-            "model": "text-embedding-3-small",
-        },
-    },
-    "persist_directory": "/tmp/chroma",  # use diretório temporário
-    "chroma_db_impl": "duckdb",  # <- FORÇA a não usar sqlite
-}
+            "embedding_model": {
+                "provider": "openai",
+                "config": {
+                    "model": "text-embedding-3-small",
+                },
+            },
+            "persist_directory": "/tmp/chroma",  # use diretório temporário
+            "chroma_db_impl": "duckdb",  # <- FORÇA a não usar sqlite
+        }
 
         return Agent(
             config=self.agents_config['agente_qa'],
-            tools=[JSONSearchTool(json_path=json_file_path, config=json_config)],
+            tools=[MyJSONSearchTool(json_path=json_file_path, config=json_config)],
             verbose=True,
         )
     
