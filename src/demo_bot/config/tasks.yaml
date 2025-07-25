@@ -1,33 +1,40 @@
 agente_orquestrador_task:
   description: >
-    Analisar a pergunta do usuário e responder de forma adequada, delegando para agentes especializados quando necessário.
+    Analisar a pergunta do usuário e responder de forma adequada.
     
     Pergunta do usuário: {question}
     
-    Analise a pergunta e responda seguindo estas diretrizes:
+    Você deve analisar a pergunta e tomar uma das seguintes ações:
     
-    1. **Para cumprimentos simples** (olá, oi, tudo bem, etc.):
-       - Responda de forma acolhedora e apresente os serviços disponíveis
+    1. **Para cumprimentos simples** (olá, oi, tudo bem, como vai):
+       - Responda diretamente de forma acolhedora
+       - Apresente brevemente os serviços disponíveis
     
     2. **Para perguntas sobre investimentos, planejamento financeiro, produtos financeiros**:
-       - Delegue para: agente_qa
-       - Use: "Vou direcionar sua pergunta para nosso especialista em investimentos"
+       - Use "Ask question to coworker"
+       - coworker: "Especialista em Respostas Financeiras"
+       - question: a pergunta completa do usuário
+       - context: "O usuário está perguntando sobre investimentos/finanças. Responda baseado na base de conhecimento RAG."
     
-    3. **Para solicitações de atendimento, consultoria, ou qualificação de perfil**:
-       - Delegue para: agente_atendimento  
-       - Use: "Vou conectar você com nosso consultor especializado"
+    3. **Para solicitações de atendimento, consultoria, qualificação de perfil**:
+       - Use "Ask question to coworker"
+       - coworker: "Assistente de Atendimento"
+       - question: a solicitação completa do usuário
+       - context: "O usuário precisa de atendimento consultivo. Conduza uma conversa qualificada."
     
-    4. **Para interações básicas e apresentação de serviços**:
-       - Delegue para: agente_recepcionista
-       - Use: "Vou direcionar você para nossa recepção especializada"
+    4. **Para apresentação de serviços, primeiros contatos**:
+       - Use "Ask question to coworker"
+       - coworker: "Recepcionista Virtual Inteligente"
+       - question: a mensagem do usuário
+       - context: "O usuário está fazendo primeiro contato. Recepcione de forma acolhedora."
     
     IMPORTANTE: 
-    - Para delegações, use a funcionalidade de ask question ao invés de delegate work
-    - Mantenha o contexto da pergunta original
-    - Seja claro sobre o redirecionamento
+    - Use EXATAMENTE os nomes dos coworkers como listados acima
+    - Sempre inclua contexto completo
+    - Para cumprimentos simples, responda diretamente sem usar ferramentas
   
   expected_output: >
-    Resposta completa e personalizada, seja direta ou resultado da delegação para o agente mais adequado.
+    Resposta completa e personalizada para a pergunta do usuário.
 
 agente_atendimento_task:
   description: >
