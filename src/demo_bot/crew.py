@@ -16,10 +16,18 @@ class DemoBot():
         super().__init__()
 
     @agent
-    def agente_principal(self) -> Agent:
+    def agente_recepcionista(self) -> Agent:
         return Agent(
-            config=self.agents_config['agente_principal'],
+            config=self.agents_config['agente_recepcionista'],
             verbose=True,
+        )
+
+    @agent
+    def agente_orquestrador(self) -> Agent:
+        return Agent(
+            config=self.agents_config['agente_orquestrador'],
+            verbose=True,
+            allow_delegation=True,
         )
 
     @agent
@@ -48,9 +56,15 @@ class DemoBot():
         )
     
     @task
-    def agente_principal_task(self) -> Task:
+    def agente_orquestrador_task(self) -> Task:
         return Task(
-            config=self.tasks_config['agente_principal_task'],
+            config=self.tasks_config['agente_orquestrador_task'],
+        )
+
+    @task
+    def agente_recepcionista_task(self) -> Task:
+        return Task(
+            config=self.tasks_config['agente_recepcionista_task'],
         )
 
     @task
@@ -67,9 +81,17 @@ class DemoBot():
 
     @crew
     def crew(self) -> Crew:
+        # In hierarchical process, manager agent is separate from the working agents
+        working_agents = [
+            self.agente_recepcionista(),
+            self.agente_atendimento(), 
+            self.agente_qa()
+        ]
         return Crew(
-            agents=self.agents,
-            tasks=self.tasks,
-            process=Process.sequential,
+            agents=working_agents,
+            tasks=[self.agente_orquestrador_task()],  # Manager's task
+            manager_agent=self.agente_orquestrador(),  # Manager is separate
+            manager_llm="gpt-4o",
+            process=Process.hierarchical,
             verbose=True,
         )

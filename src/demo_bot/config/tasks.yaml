@@ -1,14 +1,44 @@
+agente_orquestrador_task:
+  description: >
+    Analisar a pergunta do usuário e responder de forma adequada, delegando para agentes especializados quando necessário.
+    
+    Pergunta do usuário: {question}
+    
+    Analise a pergunta e responda seguindo estas diretrizes:
+    
+    1. **Para cumprimentos simples** (olá, oi, tudo bem, etc.):
+       - Responda de forma acolhedora e apresente os serviços disponíveis
+    
+    2. **Para perguntas sobre investimentos, planejamento financeiro, produtos financeiros**:
+       - Delegue para: agente_qa
+       - Use: "Vou direcionar sua pergunta para nosso especialista em investimentos"
+    
+    3. **Para solicitações de atendimento, consultoria, ou qualificação de perfil**:
+       - Delegue para: agente_atendimento  
+       - Use: "Vou conectar você com nosso consultor especializado"
+    
+    4. **Para interações básicas e apresentação de serviços**:
+       - Delegue para: agente_recepcionista
+       - Use: "Vou direcionar você para nossa recepção especializada"
+    
+    IMPORTANTE: 
+    - Para delegações, use a funcionalidade de ask question ao invés de delegate work
+    - Mantenha o contexto da pergunta original
+    - Seja claro sobre o redirecionamento
+  
+  expected_output: >
+    Resposta completa e personalizada, seja direta ou resultado da delegação para o agente mais adequado.
+
 agente_atendimento_task:
   description: >
     Realizar atendimento consultivo e qualificado a médicos interessados em organização financeira e investimentos.
       
       Você deve:
       1. Conduzir uma conversa natural seguindo o fluxo estabelecido
-      2. Identificar se o médico atua como PJ (foco principal)
-      3. Explorar dores relacionadas a organização financeira e proteção
-      4. Coletar informações de qualificação de forma não invasiva
-      5. Direcionar para contato com assessor quando apropriado
-      6. Manter registro das informações coletadas para posterior uso
+      2. Explorar dores relacionadas a organização financeira e proteção
+      3. Coletar informações de qualificação de forma não invasiva
+      4. Direcionar para contato com assessor quando apropriado
+      5. Manter registro das informações coletadas para posterior uso
       
       IMPORTANTE: Sempre priorize a experiência do usuário e construção de confiança 
       sobre pressão comercial. Um lead bem qualificado vale mais que vários mal qualificados.
@@ -25,7 +55,6 @@ agente_atendimento_task:
       - Próximos passos recomendados
       - Nível de interesse demonstrado (Alto/Médio/Baixo/Nenhum)
       - Observações relevantes sobre a conversa
-  agent: agente_atendimento
 
 agente_qa_task:
   description: >
@@ -39,7 +68,7 @@ agente_qa_task:
       2. **Consultar base RAG** usando a ferramenta JSONSearchTool com palavras-chave específicas
       3. **Extrair informações relevantes** da base de perguntas e respostas
       4. **Estruturar resposta completa** combinando múltiplas fontes se necessário
-      5. **Adaptar linguagem** para o perfil específico de médicos PJ
+      5. **Adaptar linguagem** para o perfil específico
       6. **Incluir disclaimers** apropriados conforme tipo de informação
       7. **Sugerir próximos passos** quando aplicável
       
@@ -49,7 +78,6 @@ agente_qa_task:
       Critérios de qualidade:
       - Resposta deve ser 100% baseada na base RAG
       - Linguagem clara e didática
-      - Contextualizada para médicos PJ
       - Inclui exemplos práticos quando disponíveis
       - Tem disclaimers de compliance quando necessário
       
@@ -60,48 +88,17 @@ agente_qa_task:
       - Nunca invente ou assuma informações
   expected_output: >
       Resposta estruturada contendo: Resposta direta e clara à pergunta, baseada exclusivamente no RAG
-  agent: agente_qa
 
-
-agente_principal_task:
-    description: >
-      Ser o primeiro contato acolhedor com o usuário, respondendo diretamente quando possível 
-      ou direcionando para agentes especializados quando necessário conhecimento técnico ou comercial avançado.
-
-      Pergunta do usuário: {question}
-      
-      Processo de análise obrigatório:
-      
-      1. **ANÁLISE DA MENSAGEM**:
-         - Identificar se é uma interação básica (saudação, conversa casual)
-         - Classificar nível de complexidade (básico/intermediário/avançado)
-         - Avaliar se demonstra interesse comercial claro
-      
-      2. **DECISÃO DE AÇÃO**:
-         - RESPONDER DIRETAMENTE: Para interações básicas, saudações, esclarecimentos simples
-         - DELEGAR: Para questões técnicas complexas ou interesse comercial estruturado
-      
-      3. **EXECUÇÃO DA RESPOSTA**:
-         - Se resposta direta: Fornecer resposta acolhedora e natural
-         - Se delegação: Escolher agente adequado e justificar decisão
-      
-      4. **PRESERVAÇÃO DO CONTEXTO**:
-         - Manter histórico de todas as interações
-         - Garantir continuidade entre respostas diretas e delegações
-      
-      **Prioridades**:
-      1. Construir rapport e confiança com o usuário
-      2. Responder diretamente sempre que possível
-      3. Delegar apenas quando necessário expertise específica
-      4. Manter experiência fluida e humanizada
-      
-      **Situações especiais**:
-      - Usuários confusos: Responder diretamente com orientação
-      - Transições entre agentes: Fazer de forma suave e explicativa
-      - Conversas casuais: Manter engajamento sem forçar direcionamento comercial
+agente_recepcionista_task:
+  description: >
+    Recepcionar o usuário e coletar informações iniciais para direcionamento adequado.
     
-    expected_output: >
-      Resposta estruturada que pode ser uma resposta direta ou uma delegação:
-
-      Resposta natural, acolhedora e personalizada para médicos PJ
-    agent: agente_principal
+    Processo:
+    1. **Saudar o usuário** de forma amigável e acolhedora
+    2. **Coletar informações básicas** como nome, profissão e interesse principal
+  expected_output: >
+      Resposta estruturada contendo:
+      - Nome do usuário
+      - Profissão
+      - Interesse principal (ex: organização financeira, investimentos, aposentadoria)
+      - Qualquer informação adicional relevante coletada
